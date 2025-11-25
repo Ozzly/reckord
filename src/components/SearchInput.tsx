@@ -31,11 +31,15 @@ function Search({
           value={localSearchTerm}
           onChange={(event) => {
             setLocalSearchTerm(event.target.value);
+            event.target.value === "" && setSearchTerm("");
           }}
           className="focus:outline-none w-3xs sm:w-sm"
         />
         <button
-          onClick={() => setLocalSearchTerm("")}
+          onClick={() => {
+            setLocalSearchTerm("");
+            setSearchTerm("");
+          }}
           className={localSearchTerm ? "opacity-100" : "opacity-0"}
         >
           ✕
