@@ -64,9 +64,9 @@ function MangaCard({ item }: { item: Manga }) {
         {releaseYear} | {releaseStatus}
       </p>
       <PublicRating score={score} />
-      <p>
-        {chapters || "N/A"} chapters | {volumes || "N/A"} volumes
-      </p>
+      <div className="flex justify-between">
+        <p>{chapters || "N/A"} chapters </p>
+      </div>
 
       <div className="absolute bottom-0 w-full">
         <StatusWithExtraInfo
