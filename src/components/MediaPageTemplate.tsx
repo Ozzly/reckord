@@ -198,9 +198,19 @@ function MediaPageTemplate({ config }: { config: MediaConfig }) {
           </div>
 
           <div className="flex flex-wrap justify-center gap-3">
-            {mediaSummary.map((item) => (
-              <CardComponent key={item.id} item={item} />
-            ))}
+            {mediaSummary.length === 0 ? (
+              <div className="text-ctp-text text-xl text-center">
+                <p>Your {config.title} collection is empty.</p>
+                <p>
+                  Adjust your filters or try searching for{" "}
+                  {config.title.toLocaleLowerCase()} to add.
+                </p>
+              </div>
+            ) : (
+              mediaSummary.map((item) => (
+                <CardComponent key={item.id} item={item} />
+              ))
+            )}
           </div>
         </div>
       ) : isLoading ? (
