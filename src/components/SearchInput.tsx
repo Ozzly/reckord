@@ -22,6 +22,10 @@ function Search({
     setSearchTerm(searchDebounce);
   }, [searchDebounce]);
 
+  useEffect(() => {
+    setLocalSearchTerm(searchTerm);
+  }, [searchTerm]);
+
   return (
     <div className="flex items-center border-3 border-ctp-surface0 rounded-xl focus-within:border-ctp-mauve transition-colors text-ctp-text h-11">
       <div className="p-2">

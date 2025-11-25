@@ -48,16 +48,26 @@ const pageDisplayData: Record<
 
 function SidebarPageItem({ page }: SidebarPageItemProps) {
   const setSearchCategory = useSearchStore((state) => state.setSearchCategory);
+  const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
+
+  function handleClick(isActive: boolean) {
+    if (page !== "/") {
+      if (isActive) {
+        setSearchTerm("");
+      } else {
+        setSearchCategory(page);
+      }
+    }
+  }
+
   return (
-    <NavLink
-      to={`${page}`}
-      onClick={() => page !== "/" && setSearchCategory(page)}
-    >
+    <NavLink to={`${page}`}>
       {({ isActive }) => (
         <div
           className={`p-1 hover:bg-ctp-surface0 w-full rounded-lg ${
             isActive && "font-bold bg-ctp-surface1 text-ctp-mauve"
           } `}
+          onClick={() => handleClick(isActive)}
         >
           <div
             className={`flex items-center gap-3 p-1 ${
