@@ -67,6 +67,18 @@ function MangaCard({ item }: { item: Manga }) {
       <div className="flex justify-between">
         <p>{chapters || "N/A"} chapters </p>
       </div>
+      <div className="h-12 overflow-hidden mt-1">
+        <div className="flex flex-wrap gap-1">
+          {themes?.map((theme: string) => (
+            <div
+              key={theme}
+              className="text-xs bg-ctp-surface2 rounded-xl w-fit px-2 py-0.5"
+            >
+              {theme}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="absolute bottom-0 w-full">
         <StatusWithExtraInfo

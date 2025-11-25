@@ -3,6 +3,10 @@ import type { GenericStatus, Manga } from "../types.js";
 import moment from "moment";
 
 function transformAPIData(data: any): Manga {
+  const themes = data.themes.map((theme: any) => theme.name);
+  const genres = data.genres.map((genre: any) => genre.name);
+  const genresAndThemes = [...themes, ...genres];
+
   return {
     id: data.mal_id,
     title: data.title,
@@ -14,7 +18,7 @@ function transformAPIData(data: any): Manga {
     type: data.type,
     releaseStatus: data.status,
     releaseYear: data.published.prop.from.year,
-    themes: data.themes.map((theme: any) => theme.name),
+    themes: genresAndThemes,
   };
 }
 
