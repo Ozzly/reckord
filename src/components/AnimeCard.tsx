@@ -4,6 +4,7 @@ import { FaStar } from "react-icons/fa";
 import MediaCard from "./MediaCard.js";
 import StatusWithExtraInfo from "./StatusWithExtraInfo.js";
 import PublicRating from "./PublicRating.js";
+import { animeConfig } from "../configs/mediaConfigs.js";
 interface AnimeCardProps {
   item: Anime;
 }
@@ -93,6 +94,7 @@ function AnimeCard({ item }: AnimeCardProps) {
           buttonText={getButtonText()}
           onStatusChange={onStatusChange}
           onCountChange={onCountChange}
+          statusOptions={animeConfig.statusOptions}
         />
       </div>
     </MediaCard>

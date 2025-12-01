@@ -7,12 +7,18 @@ interface StatusButtonProps {
   currentStatus: GenericStatus | null;
   handleStatusChange: (status: GenericStatus | null) => void;
   buttonText: string;
+  statusOptions: {
+    completed: string;
+    progress: string;
+    planned: string;
+  };
 }
 
 function StatusButton({
   currentStatus,
   handleStatusChange,
   buttonText,
+  statusOptions,
 }: StatusButtonProps) {
   function getMainButtonStyle() {
     const baseStyle =
@@ -88,7 +94,7 @@ function StatusButton({
                 className="hover:bg-ctp-surface1 p-1 rounded-md"
                 onClick={() => handleStatusChange("completed")}
               >
-                Mark as Completed
+                Mark as {statusOptions.completed}
                 <DropdownMenu.ItemIndicator />
               </DropdownMenu.RadioItem>
               <DropdownMenu.RadioItem
@@ -96,7 +102,7 @@ function StatusButton({
                 className="hover:bg-ctp-surface2 p-1 rounded-md"
                 onClick={() => handleStatusChange("progress")}
               >
-                Mark as Progress
+                Mark as {statusOptions.progress}
                 <DropdownMenu.ItemIndicator />
               </DropdownMenu.RadioItem>
               <DropdownMenu.RadioItem
@@ -104,7 +110,7 @@ function StatusButton({
                 className="hover:bg-ctp-surface2 p-1 rounded-md"
                 onClick={() => handleStatusChange("planned")}
               >
-                Mark as Planned
+                Mark as {statusOptions.planned}
                 <DropdownMenu.ItemIndicator />
               </DropdownMenu.RadioItem>
             </DropdownMenu.RadioGroup>

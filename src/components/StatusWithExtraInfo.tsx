@@ -11,6 +11,11 @@ interface StatusWithExtraInfoProps {
   buttonText: string;
   onStatusChange: (status: GenericStatus | null) => void;
   onCountChange: (newCount: number) => void;
+  statusOptions: {
+    completed: string;
+    progress: string;
+    planned: string;
+  };
 }
 
 function StatusWithExtraInfo({
@@ -21,6 +26,7 @@ function StatusWithExtraInfo({
   buttonText,
   onStatusChange,
   onCountChange,
+  statusOptions,
 }: StatusWithExtraInfoProps) {
   return (
     <>
@@ -47,6 +53,7 @@ function StatusWithExtraInfo({
         currentStatus={status}
         handleStatusChange={onStatusChange}
         buttonText={buttonText}
+        statusOptions={statusOptions}
       />
     </>
   );

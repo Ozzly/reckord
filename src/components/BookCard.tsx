@@ -3,6 +3,7 @@ import { useBookStore } from "../stores/bookStore.js";
 import MediaCard from "./MediaCard.js";
 import StatusWithExtraInfo from "./StatusWithExtraInfo.js";
 import PublicRating from "./PublicRating.js";
+import { bookConfig } from "../configs/mediaConfigs.js";
 
 interface BookCardProps {
   item: Book;
@@ -81,6 +82,7 @@ function BookCard({ item: book }: BookCardProps) {
           buttonText={getButtonText()}
           onStatusChange={onStatusChange}
           onCountChange={onCountChange}
+          statusOptions={bookConfig.statusOptions}
         />
       </div>
     </MediaCard>

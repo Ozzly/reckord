@@ -4,6 +4,7 @@ import { useMangaStore } from "../stores/mangaStore.js";
 import MediaCard from "./MediaCard.js";
 import PublicRating from "./PublicRating.js";
 import StatusWithExtraInfo from "./StatusWithExtraInfo.js";
+import { mangaConfig } from "../configs/mediaConfigs.js";
 
 function MangaCard({ item }: { item: Manga }) {
   const {
@@ -89,6 +90,7 @@ function MangaCard({ item }: { item: Manga }) {
           onStatusChange={onStatusChange}
           onCountChange={onCountChange}
           buttonText={getButtonText()}
+          statusOptions={mangaConfig.statusOptions}
         />
       </div>
     </MediaCard>
