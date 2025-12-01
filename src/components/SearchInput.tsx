@@ -27,7 +27,7 @@ function Search({
   }, [searchTerm]);
 
   return (
-    <div className="flex items-center border-3 border-ctp-surface0 rounded-xl focus-within:border-ctp-mauve transition-colors text-ctp-text h-11">
+    <div className="flex items-center border-3 border-ctp-surface0 rounded-xl focus-within:border-ctp-mauve transition-colors text-ctp-text h-11 w-fit">
       <div className="p-2">
         <input
           type="text"

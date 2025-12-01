@@ -53,55 +53,71 @@ function Header({ onToggleSidebar }: props) {
 
   return (
     <div className="w-full border-b-1 border-ctp-surface0 sticky top-0 bg-ctp-base z-10 text-ctp-text flex justify-center mt-1">
-      <div className="flex my-3">
-        <button>
-          <HiMenu size={24} onClick={onToggleSidebar} />
-        </button>
-        {/* <Search
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          placeholder={`Searching by ${searchCategory}`}
-        /> */}
-
-        <Select.Root
-          value={searchCategory}
-          onValueChange={(value) => {
-            setSearchCategory(value as Category);
-            console.log(value);
-            console.log(value as Category);
-          }}
-        >
-          <Select.Trigger
-            className="border-3 border-ctp-surface0 rounded-xl w-33 ml-3 flex items-center px-3 hover:border-ctp-mauve justify-between"
-            aria-label="Category"
+      <div className="my-3 md:flex">
+        <div className="flex items-center gap-3">
+          <button
+            className="md:hidden rounded-lg p-2 bg-ctp-surface0"
+            onClick={onToggleSidebar}
           >
-            <Select.Value placeholder="Select a category..." />
-            <Select.Icon className="SelectIcon">
-              <ChevronDownIcon />
-            </Select.Icon>
-          </Select.Trigger>
-          <Select.Portal>
-            <Select.Content
-              position="popper"
-              alignOffset={6}
-              className="SelectContent z-10 bg-ctp-surface0 text-ctp-text rounded-lg show-lg p-3 border-2 border-ctp-surface1"
+            <HiMenu size={24} />
+          </button>
+          <div className="hidden md:block">
+            <Search
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              placeholder={`Searching by ${searchCategory}`}
+            />
+          </div>
+
+          <div className="md:ml-3">
+            <Select.Root
+              value={searchCategory}
+              onValueChange={(value) => {
+                setSearchCategory(value as Category);
+                console.log(value);
+                console.log(value as Category);
+              }}
             >
-              <Select.ScrollUpButton className="SelectScrollButton">
-                <ChevronUpIcon />
-              </Select.ScrollUpButton>
-              <Select.Viewport className="">
-                <SelectItem value="books">Books</SelectItem>
-                <SelectItem value="anime">Anime</SelectItem>
-                <SelectItem value="manga">Manga</SelectItem>
-                <SelectItem value="movies">Movies</SelectItem>
-                <SelectItem value="shows">Shows</SelectItem>
-              </Select.Viewport>
-              <Select.ScrollDownButton className="SelectScrollButton">
-                <ChevronDownIcon />
-              </Select.ScrollDownButton>
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
+              <Select.Trigger
+                className="border-3 border-ctp-surface0 rounded-xl w-33 flex items-center px-3 hover:border-ctp-mauve justify-between h-10"
+                aria-label="Category"
+              >
+                <Select.Value placeholder="Select a category..." />
+                <Select.Icon className="SelectIcon">
+                  <ChevronDownIcon />
+                </Select.Icon>
+              </Select.Trigger>
+              <Select.Portal>
+                <Select.Content
+                  position="popper"
+                  alignOffset={6}
+                  className="SelectContent z-10 bg-ctp-surface0 text-ctp-text rounded-lg show-lg p-3 border-2 border-ctp-surface1"
+                >
+                  <Select.ScrollUpButton className="SelectScrollButton">
+                    <ChevronUpIcon />
+                  </Select.ScrollUpButton>
+                  <Select.Viewport className="">
+                    <SelectItem value="books">Books</SelectItem>
+                    <SelectItem value="anime">Anime</SelectItem>
+                    <SelectItem value="manga">Manga</SelectItem>
+                    <SelectItem value="movies">Movies</SelectItem>
+                    <SelectItem value="shows">Shows</SelectItem>
+                  </Select.Viewport>
+                  <Select.ScrollDownButton className="SelectScrollButton">
+                    <ChevronDownIcon />
+                  </Select.ScrollDownButton>
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
+          </div>
+        </div>
+        <div className="block mt-1 md:hidden">
+          <Search
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            placeholder={`Searching by ${searchCategory}`}
+          />
+        </div>
       </div>
     </div>
   );
