@@ -8,23 +8,41 @@ import { IoHomeOutline, IoReaderOutline } from "react-icons/io5";
 
 type Page = "books" | "anime" | "manga" | "movies" | "shows" | "/";
 
-function Sidebar() {
+interface props {
+  isOpen: boolean;
+  onClose: () => void;
+}
+function Sidebar({ isOpen, onClose }: props) {
   return (
-    <div className="w-64 flex-shrink-0 h-full border-r-1 border-ctp-surface0">
-      <div className="flex flex-col m-3 text-ctp-text">
-        <SidebarPageItem page="/" />
-        <SidebarPageItem page="books" />
-        <SidebarPageItem page="anime" />
-        <SidebarPageItem page="manga" />
-        <SidebarPageItem page="movies" />
-        <SidebarPageItem page="shows" />
+    <>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-ctp-crust opacity-60 z-40 md:hidden w-full h-full"
+          onClick={onClose}
+        />
+      )}
+
+      <div
+        className={`${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } w-64 flex-shrink-0 h-full border-r-1 border-ctp-surface0 overflow-hidden md:relative md:translate-x-0 fixed left-0 top-0 z-50 transition-all duration-300 bg-ctp-base`}
+      >
+        <div className="flex flex-col m-3 text-ctp-text">
+          <SidebarPageItem page="/" onClose={onClose} />
+          <SidebarPageItem page="books" onClose={onClose} />
+          <SidebarPageItem page="anime" onClose={onClose} />
+          <SidebarPageItem page="manga" onClose={onClose} />
+          <SidebarPageItem page="movies" onClose={onClose} />
+          <SidebarPageItem page="shows" onClose={onClose} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
 interface SidebarPageItemProps {
   page: Page;
+  onClose: () => void;
 }
 
 const pageDisplayData: Record<
@@ -46,7 +64,7 @@ const pageDisplayData: Record<
   "/": { label: "Home", icon: <IoHomeOutline size={20} /> },
 };
 
-function SidebarPageItem({ page }: SidebarPageItemProps) {
+function SidebarPageItem({ page, onClose }: SidebarPageItemProps) {
   const setSearchCategory = useSearchStore((state) => state.setSearchCategory);
   const setSearchTerm = useSearchStore((state) => state.setSearchTerm);
 
@@ -58,6 +76,7 @@ function SidebarPageItem({ page }: SidebarPageItemProps) {
         setSearchCategory(page);
       }
     }
+    onClose();
   }
 
   return (

@@ -8,6 +8,7 @@ import Sidebar from "./components/Sidebar.js";
 import Manga from "./pages/Manga.js";
 import Shows from "./pages/Shows.js";
 import Movies from "./pages/Movies.js";
+import { useState } from "react";
 
 const router = createBrowserRouter([
   {
@@ -44,11 +45,16 @@ const router = createBrowserRouter([
 ]);
 
 function Layout() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <div className="h-screen flex flex-col">
-      <Header />
+      <Header onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
         <div className="flex-1 overflow-auto p-2 pt-4">
           <Outlet />
         </div>

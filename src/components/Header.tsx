@@ -6,11 +6,16 @@ import { useBookStore } from "../stores/bookStore.js";
 import { useAnimeStore } from "../stores/animeStore.js";
 import { useNavigate } from "react-router";
 
+import { HiMenu } from "react-icons/hi";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import type { Category } from "../types.js";
 import { useMangaStore } from "../stores/mangaStore.js";
 
-function Header() {
+interface props {
+  onToggleSidebar: () => void;
+}
+
+function Header({ onToggleSidebar }: props) {
   const searchCategory = useSearchStore((state) => state.searchCategory);
   const setSearchCategory = useSearchStore((state) => state.setSearchCategory);
 
@@ -49,11 +54,14 @@ function Header() {
   return (
     <div className="w-full border-b-1 border-ctp-surface0 sticky top-0 bg-ctp-base z-10 text-ctp-text flex justify-center mt-1">
       <div className="flex my-3">
-        <Search
+        <button>
+          <HiMenu size={24} onClick={onToggleSidebar} />
+        </button>
+        {/* <Search
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           placeholder={`Searching by ${searchCategory}`}
-        />
+        /> */}
 
         <Select.Root
           value={searchCategory}
