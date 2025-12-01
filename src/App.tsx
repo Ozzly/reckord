@@ -45,7 +45,7 @@ const router = createBrowserRouter([
 ]);
 
 function Layout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="h-screen flex flex-col">
