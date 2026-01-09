@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { GenericStatus, Manga } from "../types.js";
 import moment from "moment";
+import { loadFromStorage } from "./storeHelpers.js";
 
 function transformAPIData(data: any): Manga {
   const themes = data.themes.map((theme: any) => theme.name);
@@ -39,20 +40,9 @@ type MangaStore = {
 export const useMangaStore = create<MangaStore>((set, get) => ({
   mangaResults: [],
 
-  mangaCompleted: (() => {
-    const stored = localStorage.getItem("manga_completed");
-    return stored ? JSON.parse(stored) : [];
-  })(),
-
-  mangaProgress: (() => {
-    const stored = localStorage.getItem("manga_progress");
-    return stored ? JSON.parse(stored) : [];
-  })(),
-
-  mangaPlanned: (() => {
-    const stored = localStorage.getItem("manga_planned");
-    return stored ? JSON.parse(stored) : [];
-  })(),
+  mangaCompleted: loadFromStorage<Manga>("manga_completed"),
+  mangaProgress: loadFromStorage<Manga>("manga_progress"),
+  mangaPlanned: loadFromStorage<Manga>("manga_planned"),
 
   addMangaToList: (manga: Manga, status: GenericStatus) => {
     let currentList: Manga[];

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { Book, GenericStatus } from "../types.js";
 import moment from "moment";
+import { loadFromStorage } from "./storeHelpers.js";
 
 const API_BASE_URL = "https://openlibrary.org";
 const API_OPTIONS = {
@@ -43,18 +44,9 @@ export const useBookStore = create<BookStore>((set, get) => ({
   isLoading: true,
   bookResults: [],
 
-  completedBooks: (() => {
-    const stored = localStorage.getItem("books_completed");
-    return stored ? JSON.parse(stored) : [];
-  })(),
-  booksProgress: (() => {
-    const stored = localStorage.getItem("books_progress");
-    return stored ? JSON.parse(stored) : [];
-  })(),
-  planToReadBooks: (() => {
-    const stored = localStorage.getItem("books_planned");
-    return stored ? JSON.parse(stored) : [];
-  })(),
+  completedBooks: loadFromStorage<Book>("books_completed"),
+  booksProgress: loadFromStorage<Book>("books_progress"),
+  planToReadBooks: loadFromStorage<Book>("books_planned"),
 
   addBookToList: (book: Book, status: GenericStatus) => {
     let currentList: Book[];
