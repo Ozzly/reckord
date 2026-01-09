@@ -67,7 +67,7 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
 
     if (currentList.some((m) => m.id === manga.id)) return;
     manga.dateAdded = moment().format("ll");
-    status === "progress" && (manga.currentChapter = 1);
+    status === "progress" && (manga.progressValue = 1);
     const updatedList = [...currentList, manga];
 
     switch (status) {
@@ -139,7 +139,7 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
 
   getCurrentChapter: (id: number): number | null => {
     const { mangaProgress } = get();
-    return mangaProgress.find((m) => m.id === id)?.currentChapter || null;
+    return mangaProgress.find((m) => m.id === id)?.progressValue || null;
   },
 
   setCurrentChapter: (id: number, chapter: number) => {
@@ -149,7 +149,7 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
 
     const updatedManga = {
       ...mangaProgress[mangaIndex],
-      currentChapter: chapter,
+      progressValue: chapter,
     } as Manga;
     const updatedList = [...mangaProgress];
     updatedList[mangaIndex] = updatedManga;

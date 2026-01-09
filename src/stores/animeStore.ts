@@ -83,7 +83,7 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
 
     if (currentList.some((a) => a.id === anime.id)) return;
     anime.dateAdded = moment().format("ll");
-    status === "progress" && (anime.currentEpisode = 1);
+    status === "progress" && (anime.progressValue = 1);
     const updatedList = [...currentList, anime];
 
     switch (status) {
@@ -152,7 +152,7 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   getCurrentEpisode: (mal_id: number): number | null => {
     const { animeWatching } = get();
     return (
-      animeWatching.find((anime) => anime.id === mal_id)?.currentEpisode ?? null
+      animeWatching.find((anime) => anime.id === mal_id)?.progressValue ?? null
     );
   },
 
@@ -164,7 +164,7 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
     const currentAnime = animeWatching[index];
     const updatedEpisode = {
       ...currentAnime,
-      currentEpisode: updatedEpisodeCount,
+      progressValue: updatedEpisodeCount,
     } as Anime;
     const updatedList = [
       ...animeWatching.slice(0, index),

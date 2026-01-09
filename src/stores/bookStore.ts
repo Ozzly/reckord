@@ -71,7 +71,7 @@ export const useBookStore = create<BookStore>((set, get) => ({
 
     if (currentList.some((b) => b.id === book.id)) return;
     book.dateAdded = moment().format("ll");
-    status === "progress" && (book.currentPage = 1);
+    status === "progress" && (book.progressValue = 1);
     const updatedList = [...currentList, book];
 
     switch (status) {
@@ -144,7 +144,7 @@ export const useBookStore = create<BookStore>((set, get) => ({
 
   getCurrentPage: (id: string): number | null => {
     const { booksProgress } = get();
-    return booksProgress.find((book) => book.id === id)?.currentPage || null;
+    return booksProgress.find((book) => book.id === id)?.progressValue || null;
   },
 
   setCurrentPage: (id: string, page: number) => {
@@ -153,7 +153,7 @@ export const useBookStore = create<BookStore>((set, get) => ({
     if (index === -1) return;
 
     const currentBook = booksProgress[index];
-    const updatedBook = { ...currentBook, currentPage: page } as Book;
+    const updatedBook = { ...currentBook, progressValue: page } as Book;
     const updatedList = [
       ...booksProgress.slice(0, index),
       updatedBook,

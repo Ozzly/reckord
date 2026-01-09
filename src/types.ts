@@ -5,7 +5,7 @@ export interface Book {
   edition_count: number;
   first_publish_year: number;
   cover_i: number;
-  currentPage?: number;
+  progressValue?: number;
   dateAdded?: string;
   pages: number;
   score: number | null;
@@ -23,7 +23,7 @@ export interface Anime {
   release_season: string;
   studio: string; // Replace with array for multiple studios later
   dateAdded?: string;
-  currentEpisode?: number;
+  progressValue?: number;
   themes: string[];
   videoType: VideoType;
 }
@@ -55,5 +55,5 @@ export interface Manga {
   releaseYear: number | null;
   themes: string[];
   dateAdded?: string;
-  currentChapter?: number;
+  progressValue?: number;
 }
