@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { Anime, GenericStatus } from "../types.js";
 import moment from "moment";
+import { loadFromStorage } from "./storeHelpers.js";
 
 const API_BASE_URL = "https://api.jikan.moe/v4";
 
@@ -55,20 +56,9 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   isLoading: false,
   animeResults: [],
 
-  animeWatched: (() => {
-    const stored = localStorage.getItem("anime_completed");
-    return stored ? JSON.parse(stored) : [];
-  })(),
-
-  animeWatching: (() => {
-    const stored = localStorage.getItem("anime_progress");
-    return stored ? JSON.parse(stored) : [];
-  })(),
-
-  animePlanned: (() => {
-    const stored = localStorage.getItem("anime_planned");
-    return stored ? JSON.parse(stored) : [];
-  })(),
+  animeWatched: loadFromStorage<Anime>("anime_completed"),
+  animeWatching: loadFromStorage<Anime>("anime_progress"),
+  animePlanned: loadFromStorage<Anime>("anime_planned"),
 
   addAnimeToList: (anime: Anime, status: GenericStatus) => {
     let currentList: Anime[];
