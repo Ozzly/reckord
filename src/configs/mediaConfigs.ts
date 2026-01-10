@@ -39,9 +39,9 @@ export const animeConfig: MediaConfig = {
     const store = useAnimeStore();
     return {
       results: store.animeResults,
-      completed: store.animeWatched,
-      progress: store.animeWatching,
-      planned: store.animePlanned,
+      completed: store.completed,
+      progress: store.progress,
+      planned: store.planned,
     };
   },
   sortOptions: ["Title", "Rating"],

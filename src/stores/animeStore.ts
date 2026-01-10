@@ -8,9 +8,9 @@ const API_BASE_URL = "https://api.jikan.moe/v4";
 type AnimeStore = {
   isLoading: boolean;
   animeResults: Anime[];
-  animeWatched: Anime[];
-  animeWatching: Anime[];
-  animePlanned: Anime[];
+  completed: Anime[];
+  progress: Anime[];
+  planned: Anime[];
   addAnimeToList: (anime: Anime, listName: GenericStatus) => void;
   getAnimeStatus: (mal_id: number) => GenericStatus | null;
   removeAnimeFromList: (mal_id: number, listName: GenericStatus) => void;
@@ -56,9 +56,9 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   isLoading: false,
   animeResults: [],
 
-  animeWatched: loadFromStorage<Anime>("anime_completed"),
-  animeWatching: loadFromStorage<Anime>("anime_progress"),
-  animePlanned: loadFromStorage<Anime>("anime_planned"),
+  completed: loadFromStorage<Anime>("anime_completed"),
+  progress: loadFromStorage<Anime>("anime_progress"),
+  planned: loadFromStorage<Anime>("anime_planned"),
 
   addAnimeToList: (anime: Anime, status: GenericStatus) => {
     let currentList: Anime[];
@@ -88,13 +88,13 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        set({ animeWatched: updatedList });
+        set({ completed: updatedList });
         break;
       case "progress":
-        set({ animeWatching: updatedList });
+        set({ progress: updatedList });
         break;
       case "planned":
-        set({ animePlanned: updatedList });
+        set({ planned: updatedList });
         break;
     }
 
@@ -102,7 +102,11 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   },
 
   getAnimeStatus: (mal_id: number): GenericStatus | null => {
-    const { animeWatched, animeWatching, animePlanned } = get();
+    const {
+      completed: animeWatched,
+      progress: animeWatching,
+      planned: animePlanned,
+    } = get();
 
     if (animeWatched.some((anime) => anime.id === mal_id)) return "completed";
     if (animeWatching.some((anime) => anime.id === mal_id)) return "progress";
@@ -115,13 +119,13 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
     let currentList: Anime[];
     switch (status) {
       case "completed":
-        currentList = get().animeWatched;
+        currentList = get().completed;
         break;
       case "progress":
-        currentList = get().animeWatching;
+        currentList = get().progress;
         break;
       case "planned":
-        currentList = get().animePlanned;
+        currentList = get().planned;
         break;
       default:
         return;
@@ -131,13 +135,13 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        set({ animeWatched: updatedList });
+        set({ completed: updatedList });
         break;
       case "progress":
-        set({ animeWatching: updatedList });
+        set({ progress: updatedList });
         break;
       case "planned":
-        set({ animePlanned: updatedList });
+        set({ planned: updatedList });
         break;
     }
 
@@ -145,19 +149,19 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   },
 
   getDateAdded: (mal_id: number): string | null => {
-    const { animeWatched } = get();
+    const { completed: animeWatched } = get();
     return animeWatched.find((anime) => anime.id === mal_id)?.dateAdded || null;
   },
 
   getCurrentEpisode: (mal_id: number): number | null => {
-    const { animeWatching } = get();
+    const { progress: animeWatching } = get();
     return (
       animeWatching.find((anime) => anime.id === mal_id)?.progressValue ?? null
     );
   },
 
   setCurrentEpisode: (mal_id: number, updatedEpisodeCount: number | null) => {
-    const { animeWatching } = get();
+    const { progress: animeWatching } = get();
     const index = animeWatching.findIndex((anime) => anime.id === mal_id);
     if (index === -1) return;
 
@@ -172,7 +176,7 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
       ...animeWatching.slice(index + 1),
     ];
     set({
-      animeWatching: updatedList,
+      progress: updatedList,
     });
     localStorage.setItem("animeWatching", JSON.stringify(updatedList));
   },
