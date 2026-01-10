@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { GenericStatus, Manga } from "../types.js";
 import moment from "moment";
-import { loadFromStorage } from "./storeHelpers.js";
+import { addItemToList, loadFromStorage } from "./storeHelpers.js";
 
 function transformAPIData(data: any): Manga {
   const themes = data.themes.map((theme: any) => theme.name);
@@ -45,43 +45,14 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
   planned: loadFromStorage<Manga>("manga_planned"),
 
   addMangaToList: (manga: Manga, status: GenericStatus) => {
-    let currentList: Manga[];
-    let storageKey: string;
-
-    switch (status) {
-      case "completed":
-        currentList = get().completed;
-        storageKey = "manga_completed";
-        break;
-      case "progress":
-        currentList = get().progress;
-        storageKey = "manga_progress";
-        break;
-      case "planned":
-        currentList = get().planned;
-        storageKey = "manga_planned";
-        break;
-      default:
-        return;
-    }
-
-    if (currentList.some((m) => m.id === manga.id)) return;
-    manga.dateAdded = moment().format("ll");
-    status === "progress" && (manga.progressValue = 1);
-    const updatedList = [...currentList, manga];
-
-    switch (status) {
-      case "completed":
-        set({ completed: updatedList });
-        break;
-      case "progress":
-        set({ progress: updatedList });
-        break;
-      case "planned":
-        set({ planned: updatedList });
-        break;
-    }
-    localStorage.setItem(storageKey, JSON.stringify(updatedList));
+    const updatedList = addItemToList<Manga>(
+      status,
+      manga,
+      get()[status],
+      "manga"
+    );
+    if (!updatedList) return;
+    set({ [status]: updatedList });
   },
 
   getMangaStatus: (id: number): GenericStatus | null => {

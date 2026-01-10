@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { Book, GenericStatus } from "../types.js";
 import moment from "moment";
-import { loadFromStorage } from "./storeHelpers.js";
+import { addItemToList, loadFromStorage } from "./storeHelpers.js";
 
 const API_BASE_URL = "https://openlibrary.org";
 const API_OPTIONS = {
@@ -49,44 +49,14 @@ export const useBookStore = create<BookStore>((set, get) => ({
   planned: loadFromStorage<Book>("books_planned"),
 
   addBookToList: (book: Book, status: GenericStatus) => {
-    let currentList: Book[];
-    let storageKey: string;
-
-    switch (status) {
-      case "completed":
-        currentList = get().completed;
-        storageKey = "books_completed";
-        break;
-      case "progress":
-        currentList = get().progress;
-        storageKey = "books_progress";
-        break;
-      case "planned":
-        currentList = get().planned;
-        storageKey = "books_planned";
-        break;
-      default:
-        return;
-    }
-
-    if (currentList.some((b) => b.id === book.id)) return;
-    book.dateAdded = moment().format("ll");
-    status === "progress" && (book.progressValue = 1);
-    const updatedList = [...currentList, book];
-
-    switch (status) {
-      case "completed":
-        set({ completed: updatedList });
-        break;
-      case "progress":
-        set({ progress: updatedList });
-        break;
-      case "planned":
-        set({ planned: updatedList });
-        break;
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(updatedList));
+    const updatedList = addItemToList<Book>(
+      status,
+      book,
+      get()[status],
+      "books"
+    );
+    if (!updatedList) return;
+    set({ [status]: updatedList });
   },
 
   getBookStatus: (id: string): GenericStatus | null => {
