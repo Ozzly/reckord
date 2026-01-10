@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { Anime, GenericStatus } from "../types.js";
 import moment from "moment";
-import { loadFromStorage } from "./storeHelpers.js";
+import { addItemToList, loadFromStorage } from "./storeHelpers.js";
 
 const API_BASE_URL = "https://api.jikan.moe/v4";
 
@@ -61,44 +61,14 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   planned: loadFromStorage<Anime>("anime_planned"),
 
   addAnimeToList: (anime: Anime, status: GenericStatus) => {
-    let currentList: Anime[];
-    let storageKey: string;
-
-    switch (status) {
-      case "completed":
-        currentList = get().animeWatched;
-        storageKey = "anime_completed";
-        break;
-      case "progress":
-        currentList = get().animeWatching;
-        storageKey = "anime_progress";
-        break;
-      case "planned":
-        currentList = get().animePlanned;
-        storageKey = "anime_planned";
-        break;
-      default:
-        return;
-    }
-
-    if (currentList.some((a) => a.id === anime.id)) return;
-    anime.dateAdded = moment().format("ll");
-    status === "progress" && (anime.progressValue = 1);
-    const updatedList = [...currentList, anime];
-
-    switch (status) {
-      case "completed":
-        set({ completed: updatedList });
-        break;
-      case "progress":
-        set({ progress: updatedList });
-        break;
-      case "planned":
-        set({ planned: updatedList });
-        break;
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(updatedList));
+    const updatedList = addItemToList<Anime>(
+      status,
+      anime,
+      get()[status],
+      "anime"
+    );
+    if (!updatedList) return;
+    set({ [status]: updatedList });
   },
 
   getAnimeStatus: (mal_id: number): GenericStatus | null => {
