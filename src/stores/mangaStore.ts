@@ -1,7 +1,11 @@
 import { create } from "zustand";
 import type { GenericStatus, Manga } from "../types.js";
 import moment from "moment";
-import { addItemToList, loadFromStorage } from "./storeHelpers.js";
+import {
+  addItemToList,
+  loadFromStorage,
+  removeItemFromList,
+} from "./storeHelpers.js";
 
 function transformAPIData(data: any): Manga {
   const themes = data.themes.map((theme: any) => theme.name);
@@ -70,41 +74,14 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
   },
 
   removeMangaFromList: (id: number, status: GenericStatus) => {
-    let currentList: Manga[];
-    let storageKey: string;
-
-    switch (status) {
-      case "completed":
-        currentList = get().completed;
-        storageKey = "manga_completed";
-        break;
-      case "progress":
-        currentList = get().progress;
-        storageKey = "manga_progress";
-        break;
-      case "planned":
-        currentList = get().planned;
-        storageKey = "manga_planned";
-        break;
-      default:
-        return;
-    }
-
-    const updatedList = currentList.filter((m) => m.id !== id);
-
-    switch (status) {
-      case "completed":
-        set({ completed: updatedList });
-        break;
-      case "progress":
-        set({ progress: updatedList });
-        break;
-      case "planned":
-        set({ planned: updatedList });
-        break;
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(updatedList));
+    const updatedList = removeItemFromList<Manga>(
+      id,
+      status,
+      get()[status],
+      "manga"
+    );
+    if (!updatedList) return;
+    set({ [status]: updatedList });
   },
 
   getDateAdded: (id: number): string | null => {

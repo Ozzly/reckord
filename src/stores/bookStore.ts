@@ -1,7 +1,11 @@
 import { create } from "zustand";
 import type { Book, GenericStatus } from "../types.js";
 import moment from "moment";
-import { addItemToList, loadFromStorage } from "./storeHelpers.js";
+import {
+  addItemToList,
+  loadFromStorage,
+  removeItemFromList,
+} from "./storeHelpers.js";
 
 const API_BASE_URL = "https://openlibrary.org";
 const API_OPTIONS = {
@@ -74,41 +78,14 @@ export const useBookStore = create<BookStore>((set, get) => ({
   },
 
   removeBookFromList: (id: string, status: GenericStatus) => {
-    let currentList: Book[];
-    let storageKey: string;
-
-    switch (status) {
-      case "completed":
-        currentList = get().completed;
-        storageKey = "books_completed";
-        break;
-      case "progress":
-        currentList = get().progress;
-        storageKey = "books_progress";
-        break;
-      case "planned":
-        currentList = get().planned;
-        storageKey = "books_planned";
-        break;
-      default:
-        return;
-    }
-
-    const updatedList = currentList.filter((b) => b.id !== id);
-
-    switch (status) {
-      case "completed":
-        set({ completed: updatedList });
-        break;
-      case "progress":
-        set({ progress: updatedList });
-        break;
-      case "planned":
-        set({ planned: updatedList });
-        break;
-    }
-
-    localStorage.setItem(storageKey, JSON.stringify(updatedList));
+    const updatedList = removeItemFromList<Book>(
+      id,
+      status,
+      get()[status],
+      "books"
+    );
+    if (!updatedList) return;
+    set({ [status]: updatedList });
   },
 
   getDateAdded: (id: string): string | null => {
