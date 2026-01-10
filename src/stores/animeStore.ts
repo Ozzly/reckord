@@ -5,6 +5,7 @@ import {
   addItemToList,
   loadFromStorage,
   removeItemFromList,
+  updateProgressValue,
 } from "./storeHelpers.js";
 
 const API_BASE_URL = "https://api.jikan.moe/v4";
@@ -76,15 +77,11 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   },
 
   getAnimeStatus: (mal_id: number): GenericStatus | null => {
-    const {
-      completed: animeWatched,
-      progress: animeWatching,
-      planned: animePlanned,
-    } = get();
+    const { completed, progress, planned } = get();
 
-    if (animeWatched.some((anime) => anime.id === mal_id)) return "completed";
-    if (animeWatching.some((anime) => anime.id === mal_id)) return "progress";
-    if (animePlanned.some((anime) => anime.id === mal_id)) return "planned";
+    if (completed.some((anime) => anime.id === mal_id)) return "completed";
+    if (progress.some((anime) => anime.id === mal_id)) return "progress";
+    if (planned.some((anime) => anime.id === mal_id)) return "planned";
 
     return null;
   },
@@ -113,24 +110,14 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   },
 
   setCurrentEpisode: (mal_id: number, updatedEpisodeCount: number | null) => {
-    const { progress: animeWatching } = get();
-    const index = animeWatching.findIndex((anime) => anime.id === mal_id);
-    if (index === -1) return;
-
-    const currentAnime = animeWatching[index];
-    const updatedEpisode = {
-      ...currentAnime,
-      progressValue: updatedEpisodeCount,
-    } as Anime;
-    const updatedList = [
-      ...animeWatching.slice(0, index),
-      updatedEpisode,
-      ...animeWatching.slice(index + 1),
-    ];
-    set({
-      progress: updatedList,
-    });
-    localStorage.setItem("animeWatching", JSON.stringify(updatedList));
+    const updatedList = updateProgressValue<Anime>(
+      mal_id,
+      updatedEpisodeCount,
+      "anime_progress",
+      get().progress
+    );
+    if (!updatedList) return;
+    set({ progress: updatedList });
   },
 
   fetchAnimeQuery: async (searchTerm: string) => {

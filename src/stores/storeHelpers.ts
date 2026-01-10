@@ -39,3 +39,26 @@ export function removeItemFromList<T extends MediaItems>(
   localStorage.setItem(storageKey, JSON.stringify(updatedList));
   return updatedList;
 }
+
+export function updateProgressValue<T extends MediaItems>(
+  id: T["id"],
+  updatedProgress: number | null,
+  storageKey: string,
+  currentList: T[]
+) {
+  const index = currentList.findIndex((item) => item.id === id);
+  if (index === -1) return;
+
+  const currentItem = currentList[index];
+  const updatedItem = {
+    ...currentItem,
+    progressValue: updatedProgress,
+  } as T;
+  const updatedList = [
+    ...currentList.slice(0, index),
+    updatedItem,
+    ...currentList.slice(index + 1),
+  ];
+  localStorage.setItem(storageKey, JSON.stringify(updatedList));
+  return updatedList;
+}
