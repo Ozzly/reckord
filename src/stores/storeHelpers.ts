@@ -27,3 +27,15 @@ export function addItemToList<T extends MediaItems>(
 
   return updatedList;
 }
+
+export function removeItemFromList<T extends MediaItems>(
+  id: T["id"],
+  status: GenericStatus,
+  currentList: T[],
+  prefix: string
+) {
+  const updatedList = currentList.filter((item) => item.id !== id);
+  const storageKey = `${prefix}_${status}`;
+  localStorage.setItem(storageKey, JSON.stringify(updatedList));
+  return updatedList;
+}

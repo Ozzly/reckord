@@ -1,7 +1,11 @@
 import { create } from "zustand";
 import type { Anime, GenericStatus } from "../types.js";
 import moment from "moment";
-import { addItemToList, loadFromStorage } from "./storeHelpers.js";
+import {
+  addItemToList,
+  loadFromStorage,
+  removeItemFromList,
+} from "./storeHelpers.js";
 
 const API_BASE_URL = "https://api.jikan.moe/v4";
 
@@ -86,36 +90,14 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   },
 
   removeAnimeFromList: (mal_id: number, status: GenericStatus) => {
-    let currentList: Anime[];
-    switch (status) {
-      case "completed":
-        currentList = get().completed;
-        break;
-      case "progress":
-        currentList = get().progress;
-        break;
-      case "planned":
-        currentList = get().planned;
-        break;
-      default:
-        return;
-    }
-
-    const updatedList = currentList.filter((anime) => anime.id !== mal_id);
-
-    switch (status) {
-      case "completed":
-        set({ completed: updatedList });
-        break;
-      case "progress":
-        set({ progress: updatedList });
-        break;
-      case "planned":
-        set({ planned: updatedList });
-        break;
-    }
-
-    localStorage.setItem(`anime_${status}`, JSON.stringify(updatedList));
+    const updatedList = removeItemFromList<Anime>(
+      mal_id,
+      status,
+      get()[status],
+      "anime"
+    );
+    if (!updatedList) return;
+    set({ [status]: updatedList });
   },
 
   getDateAdded: (mal_id: number): string | null => {
