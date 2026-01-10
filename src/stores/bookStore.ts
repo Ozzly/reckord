@@ -29,9 +29,9 @@ type BookStore = {
   isLoading: boolean;
   bookResults: Book[];
   fetchBooksQuery: (searchTerm: string) => Promise<void>;
-  completedBooks: Book[];
-  planToReadBooks: Book[];
-  booksProgress: Book[];
+  completed: Book[];
+  planned: Book[];
+  progress: Book[];
   getBookStatus: (id: string) => GenericStatus | null;
   addBookToList: (book: Book, status: GenericStatus) => void;
   removeBookFromList: (id: string, status: GenericStatus) => void;
@@ -44,9 +44,9 @@ export const useBookStore = create<BookStore>((set, get) => ({
   isLoading: true,
   bookResults: [],
 
-  completedBooks: loadFromStorage<Book>("books_completed"),
-  booksProgress: loadFromStorage<Book>("books_progress"),
-  planToReadBooks: loadFromStorage<Book>("books_planned"),
+  completed: loadFromStorage<Book>("books_completed"),
+  progress: loadFromStorage<Book>("books_progress"),
+  planned: loadFromStorage<Book>("books_planned"),
 
   addBookToList: (book: Book, status: GenericStatus) => {
     let currentList: Book[];
@@ -54,15 +54,15 @@ export const useBookStore = create<BookStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        currentList = get().completedBooks;
+        currentList = get().completed;
         storageKey = "books_completed";
         break;
       case "progress":
-        currentList = get().booksProgress;
+        currentList = get().progress;
         storageKey = "books_progress";
         break;
       case "planned":
-        currentList = get().planToReadBooks;
+        currentList = get().planned;
         storageKey = "books_planned";
         break;
       default:
@@ -76,13 +76,13 @@ export const useBookStore = create<BookStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        set({ completedBooks: updatedList });
+        set({ completed: updatedList });
         break;
       case "progress":
-        set({ booksProgress: updatedList });
+        set({ progress: updatedList });
         break;
       case "planned":
-        set({ planToReadBooks: updatedList });
+        set({ planned: updatedList });
         break;
     }
 
@@ -90,7 +90,11 @@ export const useBookStore = create<BookStore>((set, get) => ({
   },
 
   getBookStatus: (id: string): GenericStatus | null => {
-    const { completedBooks, planToReadBooks, booksProgress } = get();
+    const {
+      completed: completedBooks,
+      planned: planToReadBooks,
+      progress: booksProgress,
+    } = get();
 
     if (completedBooks.some((book) => book.id === id)) return "completed";
     if (booksProgress.some((book) => book.id === id)) return "progress";
@@ -105,15 +109,15 @@ export const useBookStore = create<BookStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        currentList = get().completedBooks;
+        currentList = get().completed;
         storageKey = "books_completed";
         break;
       case "progress":
-        currentList = get().booksProgress;
+        currentList = get().progress;
         storageKey = "books_progress";
         break;
       case "planned":
-        currentList = get().planToReadBooks;
+        currentList = get().planned;
         storageKey = "books_planned";
         break;
       default:
@@ -124,13 +128,13 @@ export const useBookStore = create<BookStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        set({ completedBooks: updatedList });
+        set({ completed: updatedList });
         break;
       case "progress":
-        set({ booksProgress: updatedList });
+        set({ progress: updatedList });
         break;
       case "planned":
-        set({ planToReadBooks: updatedList });
+        set({ planned: updatedList });
         break;
     }
 
@@ -138,17 +142,17 @@ export const useBookStore = create<BookStore>((set, get) => ({
   },
 
   getDateAdded: (id: string): string | null => {
-    const { completedBooks } = get();
+    const { completed: completedBooks } = get();
     return completedBooks.find((book) => book.id === id)?.dateAdded || null;
   },
 
   getCurrentPage: (id: string): number | null => {
-    const { booksProgress } = get();
+    const { progress: booksProgress } = get();
     return booksProgress.find((book) => book.id === id)?.progressValue || null;
   },
 
   setCurrentPage: (id: string, page: number) => {
-    const { booksProgress } = get();
+    const { progress: booksProgress } = get();
     const index = booksProgress.findIndex((b) => b.id === id);
     if (index === -1) return;
 
@@ -159,7 +163,7 @@ export const useBookStore = create<BookStore>((set, get) => ({
       updatedBook,
       ...booksProgress.slice(index + 1),
     ];
-    set({ booksProgress: updatedList });
+    set({ progress: updatedList });
 
     localStorage.setItem("books_progress", JSON.stringify(updatedList));
   },

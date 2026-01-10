@@ -60,9 +60,9 @@ export const bookConfig: MediaConfig = {
     const store = useBookStore();
     return {
       results: store.bookResults,
-      completed: store.completedBooks,
-      progress: store.booksProgress,
-      planned: store.planToReadBooks,
+      completed: store.completed,
+      progress: store.progress,
+      planned: store.planned,
     };
   },
   sortOptions: ["Title", "Rating"],
@@ -81,9 +81,9 @@ export const mangaConfig: MediaConfig = {
     const store = useMangaStore();
     return {
       results: store.mangaResults,
-      completed: store.mangaCompleted,
-      progress: store.mangaProgress,
-      planned: store.mangaPlanned,
+      completed: store.completed,
+      progress: store.progress,
+      planned: store.planned,
     };
   },
   sortOptions: ["Title", "Rating"],

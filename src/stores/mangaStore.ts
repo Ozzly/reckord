@@ -25,9 +25,9 @@ function transformAPIData(data: any): Manga {
 
 type MangaStore = {
   mangaResults: Manga[];
-  mangaCompleted: Manga[];
-  mangaProgress: Manga[];
-  mangaPlanned: Manga[];
+  completed: Manga[];
+  progress: Manga[];
+  planned: Manga[];
   addMangaToList: (item: Manga, status: GenericStatus) => void;
   getMangaStatus: (id: number) => GenericStatus | null;
   removeMangaFromList: (id: number, status: GenericStatus) => void;
@@ -40,9 +40,9 @@ type MangaStore = {
 export const useMangaStore = create<MangaStore>((set, get) => ({
   mangaResults: [],
 
-  mangaCompleted: loadFromStorage<Manga>("manga_completed"),
-  mangaProgress: loadFromStorage<Manga>("manga_progress"),
-  mangaPlanned: loadFromStorage<Manga>("manga_planned"),
+  completed: loadFromStorage<Manga>("manga_completed"),
+  progress: loadFromStorage<Manga>("manga_progress"),
+  planned: loadFromStorage<Manga>("manga_planned"),
 
   addMangaToList: (manga: Manga, status: GenericStatus) => {
     let currentList: Manga[];
@@ -50,15 +50,15 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        currentList = get().mangaCompleted;
+        currentList = get().completed;
         storageKey = "manga_completed";
         break;
       case "progress":
-        currentList = get().mangaProgress;
+        currentList = get().progress;
         storageKey = "manga_progress";
         break;
       case "planned":
-        currentList = get().mangaPlanned;
+        currentList = get().planned;
         storageKey = "manga_planned";
         break;
       default:
@@ -72,20 +72,24 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        set({ mangaCompleted: updatedList });
+        set({ completed: updatedList });
         break;
       case "progress":
-        set({ mangaProgress: updatedList });
+        set({ progress: updatedList });
         break;
       case "planned":
-        set({ mangaPlanned: updatedList });
+        set({ planned: updatedList });
         break;
     }
     localStorage.setItem(storageKey, JSON.stringify(updatedList));
   },
 
   getMangaStatus: (id: number): GenericStatus | null => {
-    const { mangaCompleted, mangaProgress, mangaPlanned } = get();
+    const {
+      completed: mangaCompleted,
+      progress: mangaProgress,
+      planned: mangaPlanned,
+    } = get();
 
     if (mangaCompleted.some((m) => m.id === id)) return "completed";
     if (mangaProgress.some((m) => m.id === id)) return "progress";
@@ -100,15 +104,15 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        currentList = get().mangaCompleted;
+        currentList = get().completed;
         storageKey = "manga_completed";
         break;
       case "progress":
-        currentList = get().mangaProgress;
+        currentList = get().progress;
         storageKey = "manga_progress";
         break;
       case "planned":
-        currentList = get().mangaPlanned;
+        currentList = get().planned;
         storageKey = "manga_planned";
         break;
       default:
@@ -119,13 +123,13 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
 
     switch (status) {
       case "completed":
-        set({ mangaCompleted: updatedList });
+        set({ completed: updatedList });
         break;
       case "progress":
-        set({ mangaProgress: updatedList });
+        set({ progress: updatedList });
         break;
       case "planned":
-        set({ mangaPlanned: updatedList });
+        set({ planned: updatedList });
         break;
     }
 
@@ -133,17 +137,17 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
   },
 
   getDateAdded: (id: number): string | null => {
-    const { mangaCompleted } = get();
+    const { completed: mangaCompleted } = get();
     return mangaCompleted.find((m) => m.id === id)?.dateAdded || null;
   },
 
   getCurrentChapter: (id: number): number | null => {
-    const { mangaProgress } = get();
+    const { progress: mangaProgress } = get();
     return mangaProgress.find((m) => m.id === id)?.progressValue || null;
   },
 
   setCurrentChapter: (id: number, chapter: number) => {
-    const { mangaProgress } = get();
+    const { progress: mangaProgress } = get();
     const mangaIndex = mangaProgress.findIndex((m) => m.id === id);
     if (mangaIndex === -1) return;
 
@@ -154,7 +158,7 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
     const updatedList = [...mangaProgress];
     updatedList[mangaIndex] = updatedManga;
 
-    set({ mangaProgress: updatedList });
+    set({ progress: updatedList });
     localStorage.setItem("manga_progress", JSON.stringify(updatedList));
   },
 
