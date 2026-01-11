@@ -5,6 +5,7 @@ import {
   addItemToList,
   loadFromStorage,
   removeItemFromList,
+  updateProgressValue,
 } from "./storeHelpers.js";
 
 const API_BASE_URL = "https://openlibrary.org";
@@ -99,20 +100,14 @@ export const useBookStore = create<BookStore>((set, get) => ({
   },
 
   setCurrentPage: (id: string, page: number) => {
-    const { progress: booksProgress } = get();
-    const index = booksProgress.findIndex((b) => b.id === id);
-    if (index === -1) return;
-
-    const currentBook = booksProgress[index];
-    const updatedBook = { ...currentBook, progressValue: page } as Book;
-    const updatedList = [
-      ...booksProgress.slice(0, index),
-      updatedBook,
-      ...booksProgress.slice(index + 1),
-    ];
+    const updatedList = updateProgressValue<Book>(
+      id,
+      page,
+      "books_progress",
+      get().progress
+    );
+    if (!updatedList) return;
     set({ progress: updatedList });
-
-    localStorage.setItem("books_progress", JSON.stringify(updatedList));
   },
 
   fetchBooksQuery: async (searchTerm) => {

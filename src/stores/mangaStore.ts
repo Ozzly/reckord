@@ -5,6 +5,7 @@ import {
   addItemToList,
   loadFromStorage,
   removeItemFromList,
+  updateProgressValue,
 } from "./storeHelpers.js";
 
 function transformAPIData(data: any): Manga {
@@ -95,19 +96,14 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
   },
 
   setCurrentChapter: (id: number, chapter: number) => {
-    const { progress: mangaProgress } = get();
-    const mangaIndex = mangaProgress.findIndex((m) => m.id === id);
-    if (mangaIndex === -1) return;
-
-    const updatedManga = {
-      ...mangaProgress[mangaIndex],
-      progressValue: chapter,
-    } as Manga;
-    const updatedList = [...mangaProgress];
-    updatedList[mangaIndex] = updatedManga;
-
+    const updatedList = updateProgressValue<Manga>(
+      id,
+      chapter,
+      "manga_progress",
+      get().progress
+    );
+    if (!updatedList) return;
     set({ progress: updatedList });
-    localStorage.setItem("manga_progress", JSON.stringify(updatedList));
   },
 
   fetchMangaQuery: async (query: string) => {
