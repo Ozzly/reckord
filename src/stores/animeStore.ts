@@ -3,6 +3,7 @@ import type { Anime, GenericStatus } from "../types.js";
 import moment from "moment";
 import {
   addItemToList,
+  getDateAdded,
   loadFromStorage,
   removeItemFromList,
   updateProgressValue,
@@ -98,8 +99,7 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
   },
 
   getDateAdded: (mal_id: number, status: GenericStatus): string | null => {
-    const animeList = get()[status];
-    return animeList.find((anime) => anime.id === mal_id)?.dateAdded || null;
+    return getDateAdded<Anime>(mal_id, get()[status]);
   },
 
   getCurrentEpisode: (mal_id: number): number | null => {

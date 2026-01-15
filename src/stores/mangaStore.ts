@@ -3,6 +3,7 @@ import type { GenericStatus, Manga } from "../types.js";
 import moment from "moment";
 import {
   addItemToList,
+  getDateAdded,
   loadFromStorage,
   removeItemFromList,
   updateProgressValue,
@@ -86,8 +87,7 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
   },
 
   getDateAdded: (id: number, status: GenericStatus): string | null => {
-    const mangaList = get()[status];
-    return mangaList.find((m) => m.id === id)?.dateAdded || null;
+    return getDateAdded<Manga>(id, get()[status]);
   },
 
   getCurrentChapter: (id: number): number | null => {
