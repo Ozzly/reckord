@@ -62,3 +62,11 @@ export function updateProgressValue<T extends MediaItems>(
   localStorage.setItem(storageKey, JSON.stringify(updatedList));
   return updatedList;
 }
+
+export function getDateAdded<T extends MediaItems>(
+  id: T["id"],
+  list: T[]
+): string | null {
+  if (!list) return null;
+  return list.find((item) => item.id === id)?.dateAdded || null;
+}
