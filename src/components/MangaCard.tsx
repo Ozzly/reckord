@@ -22,7 +22,9 @@ function MangaCard({ item }: { item: Manga }) {
   } = item;
 
   const currentStatus = useMangaStore((state) => state.getMangaStatus(id));
-  const dateAdded = useMangaStore((state) => state.getDateAdded(id));
+  const dateAdded = useMangaStore((state) =>
+    state.getDateAdded(id, currentStatus as GenericStatus)
+  );
   const currentChapter = useMangaStore((state) => state.getCurrentChapter(id));
   const removeMangaFromList = useMangaStore(
     (state) => state.removeMangaFromList

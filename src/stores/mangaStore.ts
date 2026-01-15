@@ -36,7 +36,7 @@ type MangaStore = {
   addMangaToList: (item: Manga, status: GenericStatus) => void;
   getMangaStatus: (id: number) => GenericStatus | null;
   removeMangaFromList: (id: number, status: GenericStatus) => void;
-  getDateAdded: (id: number) => string | null;
+  getDateAdded: (id: number, status: GenericStatus) => string | null;
   getCurrentChapter: (id: number) => number | null;
   setCurrentChapter: (id: number, chapter: number) => void;
   fetchMangaQuery: (query: string) => Promise<void>;
@@ -85,9 +85,9 @@ export const useMangaStore = create<MangaStore>((set, get) => ({
     set({ [status]: updatedList });
   },
 
-  getDateAdded: (id: number): string | null => {
-    const { completed: mangaCompleted } = get();
-    return mangaCompleted.find((m) => m.id === id)?.dateAdded || null;
+  getDateAdded: (id: number, status: GenericStatus): string | null => {
+    const mangaList = get()[status];
+    return mangaList.find((m) => m.id === id)?.dateAdded || null;
   },
 
   getCurrentChapter: (id: number): number | null => {

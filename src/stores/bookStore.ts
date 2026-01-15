@@ -40,7 +40,7 @@ type BookStore = {
   getBookStatus: (id: string) => GenericStatus | null;
   addBookToList: (book: Book, status: GenericStatus) => void;
   removeBookFromList: (id: string, status: GenericStatus) => void;
-  getDateAdded: (id: string) => string | null;
+  getDateAdded: (id: string, status: GenericStatus) => string | null;
   getCurrentPage: (id: string) => number | null;
   setCurrentPage: (id: string, page: number) => void;
 };
@@ -89,9 +89,9 @@ export const useBookStore = create<BookStore>((set, get) => ({
     set({ [status]: updatedList });
   },
 
-  getDateAdded: (id: string): string | null => {
-    const { completed: completedBooks } = get();
-    return completedBooks.find((book) => book.id === id)?.dateAdded || null;
+  getDateAdded: (id: string, status: GenericStatus): string | null => {
+    const bookList = get()[status];
+    return bookList.find((book) => book.id === id)?.dateAdded || null;
   },
 
   getCurrentPage: (id: string): number | null => {

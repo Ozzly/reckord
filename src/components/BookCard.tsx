@@ -22,7 +22,9 @@ function BookCard({ item: book }: BookCardProps) {
   } = book;
 
   const currentStatus = useBookStore((state) => state.getBookStatus(id));
-  const dateAdded = useBookStore((state) => state.getDateAdded(id));
+  const dateAdded = useBookStore((state) =>
+    state.getDateAdded(id, currentStatus as GenericStatus)
+  );
   const currentPage = useBookStore((state) => state.getCurrentPage(id));
   const removeBookFromList = useBookStore((state) => state.removeBookFromList);
   const addBookToList = useBookStore((state) => state.addBookToList);
