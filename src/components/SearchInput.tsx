@@ -6,6 +6,7 @@ interface SearchProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   placeholder: string;
+  standAlone: boolean;
   debounce?: number;
 }
 
@@ -14,6 +15,7 @@ function Search({
   setSearchTerm,
   placeholder,
   debounce,
+  standAlone,
 }: SearchProps) {
   const [localSearchTerm, setLocalSearchTerm] = React.useState(searchTerm);
   const [searchDebounce] = useDebounce(localSearchTerm, debounce || 1000);
@@ -27,7 +29,12 @@ function Search({
   }, [searchTerm]);
 
   return (
-    <div className="flex items-center border-3 border-ctp-surface0 rounded-xl focus-within:border-ctp-mauve transition-colors text-ctp-text h-11 w-fit">
+    <div
+      className={
+        `flex items-center border-3 border-ctp-surface0 focus-within:border-ctp-mauve transition-colors text-ctp-text h-11 w-fit` +
+        (standAlone ? " rounded-xl" : " rounded-l-xl border-r-2")
+      }
+    >
       <div className="p-2">
         <input
           type="text"
@@ -37,7 +44,10 @@ function Search({
             setLocalSearchTerm(event.target.value);
             event.target.value === "" && setSearchTerm("");
           }}
-          className="focus:outline-none w-3xs sm:w-sm"
+          className={
+            `focus:outline-none ` +
+            (standAlone ? "w-64 md:w-80 lg:w-96" : "w-48 md:w-80 lg:w-96")
+          }
         />
         <button
           onClick={() => {
@@ -49,9 +59,11 @@ function Search({
           ✕
         </button>
       </div>
-      <div className="flex items-center justify-center bg-ctp-surface0 h-full w-10 rounded-r-[9px] active:bg-ctp-surface1 transition-colors duration-600">
-        <IoSearch size={20} />
-      </div>
+      {standAlone && (
+        <div className="flex items-center justify-center bg-ctp-surface0 h-full w-10 rounded-r-[8px] active:bg-ctp-surface1 transition-colors duration-600">
+          <IoSearch size={20} />
+        </div>
+      )}
     </div>
   );
 }

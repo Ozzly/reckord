@@ -128,6 +128,7 @@ function MediaPageTemplate({ config }: { config: MediaConfig }) {
                 setSearchTerm={setSummarySearchTerm}
                 placeholder={config.searchPlaceholder}
                 debounce={300}
+                standAlone={true}
               />
             </div>
             <div>

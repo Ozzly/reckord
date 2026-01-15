@@ -54,22 +54,23 @@ function Header({ onToggleSidebar }: props) {
   return (
     <div className="w-full border-b-1 border-ctp-surface0 sticky top-0 bg-ctp-base z-10 text-ctp-text flex justify-center mt-1">
       <div className="my-3 md:flex">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center">
           <button
-            className="md:hidden rounded-lg p-2 bg-ctp-surface0"
+            className="md:hidden rounded-lg mx-2"
             onClick={onToggleSidebar}
           >
             <HiMenu size={24} />
           </button>
-          <div className="hidden md:block">
+          <div className="">
             <Search
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-              placeholder={`Searching by ${searchCategory}`}
+              placeholder={`Searching for ${searchCategory}`}
+              standAlone={false}
             />
           </div>
 
-          <div className="md:ml-3">
+          <div className="">
             <Select.Root
               value={searchCategory}
               onValueChange={(value) => {
@@ -79,7 +80,7 @@ function Header({ onToggleSidebar }: props) {
               }}
             >
               <Select.Trigger
-                className="border-3 border-ctp-surface0 rounded-xl w-33 flex items-center px-3 hover:border-ctp-mauve justify-between h-10"
+                className="border-3 border-l-2 border-ctp-surface0 rounded-r-xl w-33 flex items-center px-3 hover:border-ctp-mauve justify-between h-11"
                 aria-label="Category"
               >
                 <Select.Value placeholder="Select a category..." />
@@ -110,13 +111,6 @@ function Header({ onToggleSidebar }: props) {
               </Select.Portal>
             </Select.Root>
           </div>
-        </div>
-        <div className="block mt-1 md:hidden">
-          <Search
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            placeholder={`Searching by ${searchCategory}`}
-          />
         </div>
       </div>
     </div>
