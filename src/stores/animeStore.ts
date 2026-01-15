@@ -19,7 +19,7 @@ type AnimeStore = {
   addAnimeToList: (anime: Anime, listName: GenericStatus) => void;
   getAnimeStatus: (mal_id: number) => GenericStatus | null;
   removeAnimeFromList: (mal_id: number, listName: GenericStatus) => void;
-  getDateAdded: (mal_id: number) => string | null;
+  getDateAdded: (mal_id: number, status: GenericStatus) => string | null;
   getCurrentEpisode: (mal_id: number) => number | null;
   setCurrentEpisode: (
     mal_id: number,
@@ -97,9 +97,9 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
     set({ [status]: updatedList });
   },
 
-  getDateAdded: (mal_id: number): string | null => {
-    const { completed: animeWatched } = get();
-    return animeWatched.find((anime) => anime.id === mal_id)?.dateAdded || null;
+  getDateAdded: (mal_id: number, status: GenericStatus): string | null => {
+    const animeList = get()[status];
+    return animeList.find((anime) => anime.id === mal_id)?.dateAdded || null;
   },
 
   getCurrentEpisode: (mal_id: number): number | null => {

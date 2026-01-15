@@ -25,7 +25,9 @@ function AnimeCard({ item }: AnimeCardProps) {
 
   const currentStatus = useAnimeStore((state) => state.getAnimeStatus(id));
 
-  const dateAdded = useAnimeStore((state) => state.getDateAdded(id));
+  const dateAdded = useAnimeStore((state) =>
+    state.getDateAdded(id, currentStatus as GenericStatus)
+  );
   const currentEpisode = useAnimeStore((state) => state.getCurrentEpisode(id));
   const removeAnimeFromList = useAnimeStore(
     (state) => state.removeAnimeFromList

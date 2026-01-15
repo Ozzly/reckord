@@ -34,6 +34,8 @@ function StatusWithExtraInfo({
         <div className="text-ctp-subtext0 text-center">
           Finished {dateAdded}
         </div>
+      ) : status === "planned" ? (
+        <div className="text-ctp-subtext0 text-center">Added {dateAdded}</div>
       ) : (
         status === "progress" && (
           <div className="text-ctp-subtext0 text-center justify-center items-center flex">
