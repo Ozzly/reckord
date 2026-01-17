@@ -3,13 +3,12 @@ import type { Anime, GenericStatus } from "../types.js";
 import moment from "moment";
 import {
   addItemToList,
+  fetchQuery,
   getDateAdded,
   loadFromStorage,
   removeItemFromList,
   updateProgressValue,
 } from "./storeHelpers.js";
-
-const API_BASE_URL = "https://api.jikan.moe/v4";
 
 type AnimeStore = {
   isLoading: boolean;
@@ -24,7 +23,7 @@ type AnimeStore = {
   getCurrentEpisode: (mal_id: number) => number | null;
   setCurrentEpisode: (
     mal_id: number,
-    updatedEpisodeCount: number | null
+    updatedEpisodeCount: number | null,
   ) => void;
   fetchAnimeQuery: (searchTerm: string) => Promise<void>;
 };
@@ -71,7 +70,7 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
       status,
       anime,
       get()[status],
-      "anime"
+      "anime",
     );
     if (!updatedList) return;
     set({ [status]: updatedList });
@@ -92,7 +91,7 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
       mal_id,
       status,
       get()[status],
-      "anime"
+      "anime",
     );
     if (!updatedList) return;
     set({ [status]: updatedList });
@@ -114,7 +113,7 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
       mal_id,
       updatedEpisodeCount,
       "anime_progress",
-      get().progress
+      get().progress,
     );
     if (!updatedList) return;
     set({ progress: updatedList });
@@ -127,34 +126,12 @@ export const useAnimeStore = create<AnimeStore>((set, get) => ({
     }
 
     set({ isLoading: true });
-
-    try {
-      const endpoint = `${API_BASE_URL}/anime?q=${encodeURIComponent(
-        searchTerm
-      )}`;
-      const response = await fetch(endpoint);
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      const transformedData = data.data.map(transformAPIData);
-      console.log(transformedData);
-
-      const uniqueMap = new Map<number, Anime>();
-      transformedData.forEach((anime: Anime) => {
-        uniqueMap.set(anime.id, anime);
-      });
-      const uniqueData = Array.from(uniqueMap.values());
-
-      set({ animeResults: uniqueData || [] });
-    } catch (error) {
-      console.log(`Error fetching anime: ${error}`);
-    } finally {
-      set({ isLoading: false });
-      console.log(`Finished fetching anime`);
+    const query = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(searchTerm)}`;
+    const { error, result } = await fetchQuery<Anime>(query, transformAPIData);
+    if (error) {
+      console.error("Error fetching anime data:", error);
+      return;
     }
+    set({ animeResults: result, isLoading: false });
   },
 }));
