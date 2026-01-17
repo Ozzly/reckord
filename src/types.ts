@@ -57,3 +57,14 @@ export interface Manga {
   dateAdded?: string;
   progressValue?: number;
 }
+
+export interface Movie {
+  id: number;
+  title: string;
+  score: number;
+  cover_image: string;
+  releaseYear: number | null;
+  genres: string[];
+  dateAdded?: string;
+  progressValue?: number;
+}
